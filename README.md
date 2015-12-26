@@ -2,8 +2,6 @@
 
 Convenience functions for dictionaries with `Symbol` keys.
 
-## `@SymDict`
-
 Create a `Dict{Symbol,}`:
 
 ```julia
