@@ -16,8 +16,9 @@ export SymbolDict, StringDict, @SymDict
 typealias SymbolDict Dict{Symbol,Any}
 
 SymbolDict(d::Dict) = [symbol(k) => v for (k,v) in d]
-StringDict(d::Dict) = [string(k) => v for (k,v) in d]
-
+StringDict(d::Dict) = [ASCIIString(string(k)) => v for (k,v) in d]
+StringDict(a::Array) = [ASCIIString(string(k)) => v for (k,v) in a]
+StringDict() = Dict{ASCIIString,Any}()
 
 # SymDict from local variables and keyword arguments.
 #
@@ -47,13 +48,17 @@ macro SymDict(args...)
     # Ensure that all args are keyword arg Exprs...
     new_args = []
     for a in args
+
+        # Create assignment statement for key with no value...
         if !isa(a, Expr)
-            a = :($a=$(esc(a)))
+            a = :($a=$a)
         end
+        # Convert key from string to symbol if needed...
         if !isa(a.args[1], Symbol)
             a.args[1] = eval(:(symbol($(a.args[1]))))
         end
         a.head = :kw
+        a.args[2] = esc(a.args[2])
         push!(new_args, a)
     end
 
@@ -81,6 +86,12 @@ _SymbolDict(;args...) = SymbolDict(args)
 
 Base.merge{V}(d::Dict{Symbol,V}; args...) = merge(d, Dict{Symbol,V}(args))
 Base.merge!{V}(d::Dict{Symbol,V}; args...) = merge!(d, Dict{Symbol,V}(args))
+
+Base.merge(d::Dict{ASCIIString,Any}) = d
+Base.merge(d::Dict{ASCIIString,Any}, p::Pair...) = merge(d, Dict(p))
+
+Base.merge{K,V}(d::Dict{K,V}) = d
+Base.merge{K,V}(d::Dict{K,V}, p::Pair{K,V}...) = merge(d, Dict{K,V}(p))
 
 
 # Return default is there is no dictionary.

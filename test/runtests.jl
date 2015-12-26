@@ -40,6 +40,14 @@ d = Dict(:a=>1,:b=>2,:c=>3,:d=>4)
 d = nothing
 @test get(d, :a, "default") == "default"
 
+@test @SymDict(a=1, "b"=2, c=3) == @SymDict(a=1, b=2, c=3)
+
+
+function f(;args...)
+    StringDict(args)
+end
+
+@test f(a=1, b=2, c=3) == StringDict(@SymDict(a=1, b=2, c=3))
 
 
 #==============================================================================#
