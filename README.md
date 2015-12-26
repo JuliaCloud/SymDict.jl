@@ -5,7 +5,7 @@ Convenience functions for dictionaries with `Symbol` keys.
 Create a `Dict{Symbol,}`:
 
 ```julia
-@SymDict(a=1, a=2)
+@SymDict(a=1, b=2)
 
 Dict{Symbol,Any}(:a=>1,:b=>2)
 ```
