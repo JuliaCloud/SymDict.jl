@@ -55,7 +55,7 @@ macro SymDict(args...)
         end
         # Convert key from string to symbol if needed...
         if !isa(a.args[1], Symbol)
-            a.args[1] = eval(:(symbol($(a.args[1]))))
+            a.args[1] = current_module().eval(:(symbol($(a.args[1]))))
         end
         a.head = :kw
         a.args[2] = esc(a.args[2])
@@ -89,9 +89,13 @@ Base.merge!{V}(d::Dict{Symbol,V}; args...) = merge!(d, Dict{Symbol,V}(args))
 
 Base.merge(d::Dict{ASCIIString,Any}) = d
 Base.merge(d::Dict{ASCIIString,Any}, p::Pair...) = merge(d, Dict(p))
+Base.merge!(d::Dict{ASCIIString,Any}) = d
+Base.merge!(d::Dict{ASCIIString,Any}, p::Pair...) = merge!(d, Dict(p))
 
 Base.merge{K,V}(d::Dict{K,V}) = d
 Base.merge{K,V}(d::Dict{K,V}, p::Pair{K,V}...) = merge(d, Dict{K,V}(p))
+Base.merge!{K,V}(d::Dict{K,V}) = d
+Base.merge!{K,V}(d::Dict{K,V}, p::Pair{K,V}...) = merge!(d, Dict{K,V}(p))
 
 
 # Return default is there is no dictionary.
