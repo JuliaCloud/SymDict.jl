@@ -2,6 +2,8 @@
 
 Convenience functions for dictionaries with `Symbol` keys.
 
+[![Build Status](https://travis-ci.org/samoconnor/SymDict.jl.svg)](https://travis-ci.org/samoconnor/SymDict.jl)
+
 Create a `Dict{Symbol,}`:
 
 ```julia
