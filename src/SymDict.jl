@@ -21,6 +21,7 @@ typealias SymbolDict Dict{Symbol,Any}
 SymbolDict(d::Dict) = [symbol(k) => v for (k,v) in d]
 StringDict(d::Dict) = [ASCIIString(string(k)) => v for (k,v) in d]
 StringDict(a::Array) = [ASCIIString(string(k)) => v for (k,v) in a]
+StringDict(p::Pair...) = [ASCIIString(string(k)) => v for (k,v) in p]
 StringDict() = Dict{ASCIIString,Any}()
 
 # SymDict from local variables and keyword arguments.
