@@ -18,7 +18,7 @@ export SymbolDict, StringDict, @SymDict
 
 typealias SymbolDict Dict{Symbol,Any}
 
-SymbolDict(d::Dict) = [symbol(k) => v for (k,v) in d]
+SymbolDict(d::Dict) = [Symbol(k) => v for (k,v) in d]
 StringDict(d::Dict) = [ASCIIString(string(k)) => v for (k,v) in d]
 StringDict(a::Array) = [ASCIIString(string(k)) => v for (k,v) in a]
 StringDict(p::Pair...) = [ASCIIString(string(k)) => v for (k,v) in p]
@@ -44,7 +44,7 @@ macro SymDict(args...)
 
     # Check for "args..." at end...
     extra = nothing
-    if isa(args[end], Expr) && args[end].head == symbol("...")
+    if isa(args[end], Expr) && args[end].head == Symbol("...")
         extra = :(SymbolDict($(esc(args[end].args[1]))))
         args = args[1:end-1]
     end
@@ -57,9 +57,9 @@ macro SymDict(args...)
         if !isa(a, Expr)
             a = :($a=$a)
         end
-        # Convert key from string to symbol if needed...
+        # Convert key from string to Symbol if needed...
         if !isa(a.args[1], Symbol)
-            a.args[1] = current_module().eval(:(symbol($(a.args[1]))))
+            a.args[1] = current_module().eval(:(Symbol($(a.args[1]))))
         end
         a.head = :kw
         a.args[2] = esc(a.args[2])
