@@ -24,13 +24,13 @@ end
 @test f() == Dict(:a=>1,:b=>2,:c=>3,:d=>4)
 
 
-function f(a; args...)
+function f2(a; args...)
     b = 2
     @SymDict(a, b, c=3, d=4, args...)
 end
-@test f(1) == Dict(:a=>1,:b=>2,:c=>3,:d=>4)
-@test f(1,d="!") == Dict(:a=>1,:b=>2,:c=>3,:d=>"!")
-@test f(1,x=24,y=25,z=26) == Dict(:a=>1,:b=>2,:c=>3,:d=>4,:x=>24,:y=>25,:z=>26)
+@test f2(1) == Dict(:a=>1,:b=>2,:c=>3,:d=>4)
+@test f2(1,d="!") == Dict(:a=>1,:b=>2,:c=>3,:d=>"!")
+@test f2(1,x=24,y=25,z=26) == Dict(:a=>1,:b=>2,:c=>3,:d=>4,:x=>24,:y=>25,:z=>26)
 
 
 d = Dict(:a=>1,:b=>2,:c=>3,:d=>4)
@@ -43,11 +43,11 @@ d = nothing
 @test @SymDict(a=1, "b"=2, c=3) == @SymDict(a=1, b=2, c=3)
 
 
-function f(;args...)
+function f3(;args...)
     StringDict(args)
 end
 
-@test f(a=1, b=2, c=3) == StringDict(@SymDict(a=1, b=2, c=3))
+@test f3(a=1, b=2, c=3) == StringDict(@SymDict(a=1, b=2, c=3))
 
 
 #==============================================================================#

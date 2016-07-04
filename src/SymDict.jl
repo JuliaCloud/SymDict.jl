@@ -16,13 +16,43 @@ module SymDict
 export SymbolDict, StringDict, @SymDict
 
 
-typealias SymbolDict Dict{Symbol,Any}
+using Compat
+import Compat: String
 
-SymbolDict(d::Dict) = [Symbol(k) => v for (k,v) in d]
-StringDict(d::Dict) = [ASCIIString(string(k)) => v for (k,v) in d]
-StringDict(a::Array) = [ASCIIString(string(k)) => v for (k,v) in a]
-StringDict(p::Pair...) = [ASCIIString(string(k)) => v for (k,v) in p]
-StringDict() = Dict{ASCIIString,Any}()
+
+typealias SymbolDict Dict{Symbol,Any}
+typealias StringDict Dict{String,Any}
+
+
+SymbolDict(d::SymbolDict) = d
+
+
+function SymbolDict(kv)
+    d = SymbolDict()
+    for (k,v) in kv
+        d[Symbol(k)] = v
+    end
+    return d
+end
+
+
+function _SymbolDict(;args...)
+    d = SymbolDict()
+    for (k,v) in args
+        d[k] = v
+    end
+    return d
+end
+
+
+function StringDict(kv)
+    d = StringDict()
+    for (k,v) in kv
+        d[string(k)] = v
+    end
+    return d
+end
+
 
 # SymDict from local variables and keyword arguments.
 #
@@ -74,35 +104,25 @@ macro SymDict(args...)
 end
 
 
-# SymbolDict from keyword arguments.
-#
-#   _SymbolDict(a=1,b=2)
-#   Dict{Symbol,Any}(:a=>1,:b=>2)
-
-_SymbolDict(;args...) = SymbolDict(args)
-
-
 # Merge new k,v pairs into dictionary.
 #
 #   d = @SymDict(a=1,b=2)
 #   merge(d, c=3, d=4)
 #   Dict(:a=>1,:b=>2,:c=>3,:d=>4)
 
-Base.merge{V}(d::Dict{Symbol,V}; args...) = merge(d, Dict{Symbol,V}(args))
-Base.merge!{V}(d::Dict{Symbol,V}; args...) = merge!(d, Dict{Symbol,V}(args))
-
-Base.merge(d::Dict{ASCIIString,Any}) = d
-Base.merge(d::Dict{ASCIIString,Any}, p::Pair...) = merge(d, Dict(p))
-Base.merge!(d::Dict{ASCIIString,Any}) = d
-Base.merge!(d::Dict{ASCIIString,Any}, p::Pair...) = merge!(d, Dict(p))
-
-Base.merge{K,V}(d::Dict{K,V}) = d
-Base.merge{K,V}(d::Dict{K,V}, p::Pair{K,V}...) = merge(d, Dict{K,V}(p))
-Base.merge!{K,V}(d::Dict{K,V}) = d
-Base.merge!{K,V}(d::Dict{K,V}, p::Pair{K,V}...) = merge!(d, Dict{K,V}(p))
+Base.merge{K,V}(d::Dict{K,V}; args...) = merge(d, Dict{K,V}(args))
+Base.merge!{K,V}(d::Dict{K,V}; args...) = merge!(d, Dict{K,V}(args))
 
 
-# Return default is there is no dictionary.
+#   d = StringDict("a" => 1, "b" => 2)
+#   merge(d, "c" => 3, "d" => 4)
+#   Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4)
+
+Base.merge(d::StringDict) = d
+Base.merge(d::StringDict, p::Pair...) = merge(d, Dict(p))
+
+
+# Return default if there is no dictionary.
 
 Base.get(nothing::Void, key, default) = default
 
