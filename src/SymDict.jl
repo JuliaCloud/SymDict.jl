@@ -27,7 +27,7 @@ typealias StringDict Dict{String,Any}
 SymbolDict(d::SymbolDict) = d
 
 
-function SymbolDict(kv)
+function SymbolDict(kv::Dict)
     d = SymbolDict()
     for (k,v) in kv
         d[Symbol(k)] = v
@@ -45,7 +45,7 @@ function _SymbolDict(;args...)
 end
 
 
-function StringDict(kv)
+function StringDict(kv::Union{Vector,Dict})
     d = StringDict()
     for (k,v) in kv
         d[string(k)] = v
