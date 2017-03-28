@@ -36,6 +36,10 @@ end
 d = Dict(:a=>1,:b=>2,:c=>3,:d=>4)
 @test merge(d, e=5, f=6) == Dict(:a=>1,:b=>2,:c=>3,:d=>4,:e=>5,:f=>6)
 
+d = StringDict(Dict(:a=>1,:b=>2,:c=>3,:d=>4))
+@test merge(d) == Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4)
+@test merge(d, "e" => 5, "f" => 6) == Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4,"e"=>5,"f"=>6)
+
 
 d = nothing
 @test get(d, :a, "default") == "default"
