@@ -16,9 +16,6 @@ module SymDict
 export SymbolDict, StringDict, @SymDict
 
 
-using Compat
-import Compat: String
-
 
 typealias SymbolDict Dict{Symbol,Any}
 typealias StringDict Dict{String,Any}
