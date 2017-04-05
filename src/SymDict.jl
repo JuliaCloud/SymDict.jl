@@ -21,7 +21,7 @@ typealias SymbolDict Dict{Symbol,Any}
 typealias StringDict Dict{String,Any}
 
 
-SymbolDict(d::SymbolDict) = d
+#SymbolDict(d::SymbolDict) = Dict(d)
 
 
 function SymbolDict(kv::Dict)
