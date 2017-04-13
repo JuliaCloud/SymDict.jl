@@ -13,7 +13,7 @@ __precompile__()
 module SymDict
 
 
-export SymbolDict, StringDict, @SymDict
+export SymbolDict, StringDict, @SymDict, symboldict, stringdict
 
 
 
@@ -21,10 +21,10 @@ typealias SymbolDict Dict{Symbol,Any}
 typealias StringDict Dict{String,Any}
 
 
-#SymbolDict(d::SymbolDict) = Dict(d)
+symboldict(x) = symboldict(SymbolDict(x))
 
 
-function SymbolDict(kv::Dict)
+function symboldict(kv::Dict)
     d = SymbolDict()
     for (k,v) in kv
         d[Symbol(k)] = v
@@ -33,7 +33,7 @@ function SymbolDict(kv::Dict)
 end
 
 
-function _SymbolDict(;args...)
+function symboldict(;args...)
     d = SymbolDict()
     for (k,v) in args
         d[k] = v
@@ -42,7 +42,7 @@ function _SymbolDict(;args...)
 end
 
 
-function StringDict(kv::Union{Vector,Dict})
+function stringdict(kv::Union{Vector,Dict})
     d = StringDict()
     for (k,v) in kv
         d[string(k)] = v
@@ -72,7 +72,7 @@ macro SymDict(args...)
     # Check for "args..." at end...
     extra = nothing
     if isa(args[end], Expr) && args[end].head == Symbol("...")
-        extra = :(SymbolDict($(esc(args[end].args[1]))))
+        extra = :(symboldict($(esc(args[end].args[1]))))
         args = args[1:end-1]
     end
 
@@ -94,35 +94,11 @@ macro SymDict(args...)
     end
 
     if extra != nothing
-        :(merge!(_SymbolDict($(new_args...)), $extra))
+        :(merge!(symboldict($(new_args...)), $extra))
     else
-        :(_SymbolDict($(new_args...)))
+        :(symboldict($(new_args...)))
     end
 end
-
-
-# Merge new k,v pairs into dictionary.
-#
-#   d = @SymDict(a=1,b=2)
-#   merge(d, c=3, d=4)
-#   Dict(:a=>1,:b=>2,:c=>3,:d=>4)
-
-Base.merge{K,V}(d::Dict{K,V}; args...) = merge(d, Dict{K,V}(args))
-Base.merge!{K,V}(d::Dict{K,V}; args...) = merge!(d, Dict{K,V}(args))
-
-
-#   d = StringDict("a" => 1, "b" => 2)
-#   merge(d, "c" => 3, "d" => 4)
-#   Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4)
-
-Base.merge(d::StringDict) = d
-Base.merge(d::StringDict, p::Pair...) = merge(d, Dict(p))
-
-
-# Return default if there is no dictionary.
-
-Base.get(nothing::Void, key, default) = default
-
 
 
 end # module SymDict

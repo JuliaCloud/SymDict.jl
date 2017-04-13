@@ -12,8 +12,8 @@ using Base.Test
 
 d = Dict(:a=>1,:b=>2)
 
-@test StringDict(d) == Dict("a"=>1,"b"=>2)
-@test SymbolDict(StringDict(d)) == d
+@test stringdict(d) == Dict("a"=>1,"b"=>2)
+@test symboldict(stringdict(d)) == d
 
 
 function f()
@@ -33,25 +33,14 @@ end
 @test f2(1,x=24,y=25,z=26) == Dict(:a=>1,:b=>2,:c=>3,:d=>4,:x=>24,:y=>25,:z=>26)
 
 
-d = Dict(:a=>1,:b=>2,:c=>3,:d=>4)
-@test merge(d, e=5, f=6) == Dict(:a=>1,:b=>2,:c=>3,:d=>4,:e=>5,:f=>6)
-
-d = StringDict(Dict(:a=>1,:b=>2,:c=>3,:d=>4))
-@test merge(d) == Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4)
-@test merge(d, "e" => 5, "f" => 6) == Dict("a"=>1,"b"=>2,"c"=>3,"d"=>4,"e"=>5,"f"=>6)
-
-
-d = nothing
-@test get(d, :a, "default") == "default"
-
 @test @SymDict(a=1, "b"=2, c=3) == @SymDict(a=1, b=2, c=3)
 
 
 function f3(;args...)
-    StringDict(args)
+    stringdict(args)
 end
 
-@test f3(a=1, b=2, c=3) == StringDict(@SymDict(a=1, b=2, c=3))
+@test f3(a=1, b=2, c=3) == stringdict(@SymDict(a=1, b=2, c=3))
 
 
 #==============================================================================#
