@@ -17,8 +17,8 @@ export SymbolDict, StringDict, @SymDict, symboldict, stringdict
 
 
 
-typealias SymbolDict Dict{Symbol,Any}
-typealias StringDict Dict{String,Any}
+const SymbolDict = Dict{Symbol,Any}
+const StringDict = Dict{String,Any}
 
 
 symboldict(x) = symboldict(SymbolDict(x))
