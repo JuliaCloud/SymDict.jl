@@ -12,6 +12,8 @@ __precompile__()
 
 module SymDict
 
+using Compat: @__MODULE__
+
 
 export SymbolDict, StringDict, @SymDict, symboldict, stringdict
 
@@ -86,7 +88,7 @@ macro SymDict(args...)
         end
         # Convert key from string to Symbol if needed...
         if !isa(a.args[1], Symbol)
-            a.args[1] = current_module().eval(:(Symbol($(a.args[1]))))
+            a.args[1] = eval(@__MODULE__, :(Symbol($(a.args[1]))))
         end
         a.head = :kw
         a.args[2] = esc(a.args[2])
