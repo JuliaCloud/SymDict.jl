@@ -12,7 +12,7 @@ __precompile__()
 
 module SymDict
 
-using Compat: @__MODULE__
+using Compat: @__MODULE__, AbstractDict
 
 
 export SymbolDict, StringDict, @SymDict, symboldict, stringdict
@@ -44,7 +44,7 @@ function symboldict(;args...)
 end
 
 
-function stringdict(kv::Union{Vector,Dict})
+function stringdict(kv::Union{Vector, AbstractDict})
     d = StringDict()
     for (k,v) in kv
         d[string(k)] = v
