@@ -8,7 +8,7 @@
 
 
 using SymDict
-using Base.Test
+using Compat.Test
 
 d = Dict(:a=>1,:b=>2)
 
