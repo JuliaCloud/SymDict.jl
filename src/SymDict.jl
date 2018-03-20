@@ -12,8 +12,6 @@ __precompile__()
 
 module SymDict
 
-using Compat: @__MODULE__, AbstractDict
-
 
 export SymbolDict, StringDict, @SymDict, symboldict, stringdict
 
@@ -44,7 +42,7 @@ function symboldict(;args...)
 end
 
 
-function stringdict(kv::Union{Vector, AbstractDict})
+function stringdict(kv)
     d = StringDict()
     for (k,v) in kv
         d[string(k)] = v
@@ -88,7 +86,7 @@ macro SymDict(args...)
         end
         # Convert key from string to Symbol if needed...
         if !isa(a.args[1], Symbol)
-            a.args[1] = eval(@__MODULE__, :(Symbol($(a.args[1]))))
+            a.args[1] = Symbol(a.args[1])
         end
         a.head = :kw
         a.args[2] = esc(a.args[2])
