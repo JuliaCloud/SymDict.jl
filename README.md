@@ -60,11 +60,11 @@ Convert to/from `Dict{AbstractString,}:
 
 ```julia
 d = @SymDict(a=1, b=2)
-d = StringDict(d)
+d = stringdict(d)
 
-Dict{ByteString,Any}("a"=>1,"b"=>2)
+Dict{String,Any}("a"=>1,"b"=>2)
 
-d = SymbolDict(d)
+d = symboldict(d)
 
 Dict{Symbol,Any}(:a=>1,:b=>2)
 ```
